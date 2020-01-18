@@ -1,0 +1,353 @@
+------------------------테이블 삭제--------------------------
+DROP TABLE timeSetting;
+DROP TABLE CHAT;
+DROP TABLE CHATPROFILE;
+DROP TABLE MYClientInfo;        -- 나만의 상담자 정보
+DROP TABLE inquiryboardfile;                -- 파일
+DROP TABLE NOTICEBOARD;         -- 공지사항 테이블
+DROP TABLE INQUIRYBOARD;        -- 문의사항 게시판 테이블
+DROP TABLE COUNSELOR;           -- 상담원 테이블
+DROP TABLE Corporation;
+DROP TABLE admin;
+DROP TABLE adminboard;
+DROP TABLE Clientinfo;
+DROP TABLE MESSENGER;
+DROP TABLE FREQUENTREPLY;
+------------------------테이블 삭제--------------------------
+
+------------------------시퀀스 삭제--------------------------
+DROP SEQUENCE timeSetting_seq;
+DROP SEQUENCE myclientinfono_seq; --나만의 상담자 정보 시퀀스
+DROP SEQUENCE fileno_seq;         --파일 시퀀스
+DROP SEQUENCE nBoardNo_seq;       --공지사항 시퀀스
+DROP SEQUENCE iBoardNo_seq;       --문의사항 게시판 시퀀스
+DROP SEQUENCE counselorNo_seq;    --상담원 시퀀스
+DROP SEQUENCE admin_seq;
+DROP SEQUENCE adminboard_seq;
+DROP SEQUENCE ClientInfo_seq;
+DROP SEQUENCE CHAT_seq;
+DROP SEQUENCE CHATPROFILE_seq;
+DROP SEQUENCE msgNo_seq;
+DROP SEQUENCE faq_seq;
+------------------------시퀀스 삭제--------------------------
+
+
+
+-- 메신저 테이블
+--DROP TABLE MESSENGER;
+CREATE TABLE MESSENGER(
+    messengerNo NUMBER PRIMARY KEY,
+    messengerName VARCHAR2(10) NOT NULL,
+    messengerImage VARCHAR2(10) NOT NULL,
+    registrationStatus NUMBER NOT NULL,
+    useStatus NUMBER NOT NULL
+);
+-- 메신저 넘버
+--DROP SEQUENCE msgNo_seq;
+CREATE SEQUENCE msgNo_seq;
+
+-- 상담자 정보 테이블
+--DROP TABLE Clentinfo;
+CREATE TABLE ClientInfo (
+    clientInfoNo NUMBER PRIMARY KEY,
+    clientName VARCHAR2(20),
+    clientPhoneNum VARCHAR2(20),
+    lastChatDate VARCHAR2(20),
+    counselorName VARCHAR2(20),
+    chatMemo VARCHAR2(500)
+);
+--DROP SEQUENCE ClientInfo_seq;  
+CREATE SEQUENCE ClientInfo_seq;  
+
+--테이블 지우는 순서
+--( 나만의 상담자 정보 -> 파일 -> 문의사항 -> 공지사항 -> 상담원 )
+-- 상담원을 맨 나중에, 나머지는 상관 없음
+
+--DROP TABLE MYClientInfo;        -- 나만의 상담자 정보
+--DROP TABLE inquiryboardfile;                -- 파일
+--DROP TABLE NOTICEBOARD;         -- 공지사항 테이블
+--DROP TABLE INQUIRYBOARD;        -- 문의사항 게시판 테이블
+--DROP TABLE COUNSELOR;           -- 상담원 테이블
+
+--------------------------------
+--시퀀스 지우기--
+--DROP SEQUENCE myclientinfono_seq; --나만의 상담자 정보 시퀀스
+--DROP SEQUENCE fileno_seq;         --파일 시퀀스
+--DROP SEQUENCE nBoardNo_seq;       --공지사항 시퀀스
+--DROP SEQUENCE iBoardNo_seq;       --문의사항 게시판 시퀀스
+--DROP SEQUENCE counselorNo_seq;    --상담원 시퀀스
+------------------------------------------
+
+
+
+
+--테이블 생성 순서
+--( 기업 - 상담원 -> 공지사항 -> 문의사항 -> 파일 -> 나만의 상담자 정보 )
+
+--기업 테이블 시퀀스는 필요 없음
+-- 기업 테이블
+CREATE TABLE Corporation(
+    corporationNo NUMBER PRIMARY KEY,
+    corporationName VARCHAR2(20) NOT NULL
+);
+
+
+--상담원 테이블 시퀀스 생성
+CREATE SEQUENCE counselorNo_seq;
+
+--상담원 테이블, 기본키에는 NOT NULL이 포함되어있음
+CREATE TABLE COUNSELOR (
+   counselorNo NUMBER PRIMARY KEY,
+   counselorName VARCHAR2(20) NOT NULL,
+   counselorId VARCHAR2(20) NOT NULL,
+   counselorPassword   VARCHAR2(20) NOT NULL,
+   counselorNickname   VARCHAR2(20) NOT NULL,
+   counselorEmail   VARCHAR2(20) NOT NULL,
+   counselorPhoneNumber   VARCHAR2(20) NOT NULL,
+   counselorSignDate   VARCHAR2(20) NOT NULL,
+   counselorPosition   VARCHAR2(20) NOT NULL,
+   counselorMarketingAgree   NUMBER NOT NULL,
+   counselorEmailChecked   NUMBER NOT NULL,
+   managerConfirm   NUMBER NOT NULL,
+   corporationNo   NUMBER NOT NULL,
+   CONSTRAINT corporationNo_fk FOREIGN KEY(corporationNo) REFERENCES Corporation(corporationNo)
+);
+
+
+
+--공지사항 테이블 시퀀스 생성
+CREATE SEQUENCE nBoardNo_seq;
+
+--공지사항 테이블, 기본키에는 NOT NULL이 포함되어있음
+CREATE TABLE NOTICEBOARD (
+   nBoardNo NUMBER PRIMARY KEY,
+   nBoardTitle VARCHAR2(50) NOT NULL,
+   nBoardDate VARCHAR2(20) NOT NULL,
+   nBoardContent   VARCHAR2(500) NOT NULL,
+   nBoardViews   NUMBER NOT NULL,
+   nBoardBookMark   VARCHAR2(10) NOT NULL,
+   counselorNo   NUMBER NOT NULL,
+    CONSTRAINT counselorNo_notice_fk FOREIGN KEY(counselorNo) REFERENCES COUNSELOR(counselorNo)
+);
+
+
+
+--문의사항 게시판 테이블 시퀀스 생성
+CREATE SEQUENCE iBoardNo_seq;
+
+--문의사항 게시판 테이블, 기본키에는 NOT NULL이 포함되어있음
+CREATE TABLE INQUIRYBOARD (
+   iBoardNo NUMBER PRIMARY KEY,
+   iBoardTitle VARCHAR2(50) NOT NULL,
+   iBoardDate VARCHAR2(20) NOT NULL,
+   iBoardContent   VARCHAR2(500) NOT NULL,
+   iBoardViews   NUMBER NOT NULL,
+   iBoardBookMark   VARCHAR2(10) NOT NULL,
+   iBoardInquiryType VARCHAR2(10) NOT NULL,
+   iBoardSecret VARCHAR2(10) NOT NULL,
+   iBoardSecretPw VARCHAR2(20),
+   iBoardAnswer VARCHAR2(10) NOT NULL,
+   counselorNo   NUMBER NOT NULL,
+   CONSTRAINT counselorNo_inquiry_fk FOREIGN KEY(counselorNo) REFERENCES COUNSELOR(counselorNo)
+);
+
+
+
+--나만의 상담자 정보 시퀀스 생성
+CREATE SEQUENCE myclientinfono_seq; 
+
+-- clientinfono_fk가 chatprofile에 존재해서 이름 myclientinfono_fk했습니다ㅏ(유진)
+CREATE TABLE MyClientInfo(
+    myClientInfoNo Number primary key,
+    counselorNo Number not null,
+    counselorId VARCHAR2(20),
+    isBlock Number,
+    isFixedMatch Number,
+    clientNick varchar(20),
+    clientInfoNo Number,
+
+    constraint counselorno_fk foreign key(counselorno) REFERENCES counselor(counselorno),
+    constraint myclientinfono_fk foreign key(clientinfono) REFERENCES clientinfo(clientinfono)
+);
+
+-- 채팅프로필 테이블
+--DROP TABLE CHATPROFILE;
+CREATE TABLE CHATPROFILE (
+    chatProfileNo NUMBER NOT NULL PRIMARY KEY,
+    messengerNo NUMBER NOT NULL,
+    clientID VARCHAR2(20) NOT NULL,
+    status NUMBER NOT NULL,
+    counselorID VARCHAR(20),
+    isFixedMatch NUMBER NOT NULL,
+    lastChatDate VARCHAR2(30),
+    topFixedNum NUMBER NOT NULL,
+    clientInfoNo NUMBER,
+--  myClientInfoNo NUMBER,
+    
+    CONSTRAINT messengerNo_fk FOREIGN KEY(messengerNo) REFERENCES Messenger(messengerNo),
+--    CONSTRAINT myClientInfoNo_fk FOREIGN KEY(myClientInfoNo) REFERENCES MyClientInfo(myClientInfoNo),
+    CONSTRAINT clientInfoNo_fk FOREIGN KEY(clientInfoNo) REFERENCES ClientInfo(clientInfoNo)
+    );
+--DROP SEQUENCE CHATPROFILE_seq;
+CREATE SEQUENCE CHATPROFILE_seq;
+
+
+-- 채팅 테이블 생성
+--DROP TABLE CHAT;
+CREATE TABLE CHAT (
+    chatNo NUMBER NOT NULL PRIMARY KEY,
+    chatProfileNo NUMBER NOT NULL,
+    fromID VARCHAR2(20) NOT NULL,
+    toID VARCHAR2(20) NOT NULL,
+    chatContent VARCHAR2(500) NOT NULL,
+    messageType NUMBER NOT NULL,
+    chatTIME VARCHAR2(30) NOT NULL,
+    chatRead NUMBER NOT NULL
+    );
+
+-- 채팅 테이블 시퀀스 생성
+CREATE SEQUENCE chat_seq;
+ALTER TABLE CHAT ADD CONSTRAINT chatProfileNo_fk FOREIGN KEY(chatProfileNo) REFERENCES CHATPROFILE(chatProfileNo);
+
+
+--파일 시퀀스 생성
+CREATE SEQUENCE fileno_seq;   
+-- 문의사항
+CREATE TABLE inquiryboardfile(
+    fileno Number primary key,
+    originalname VARCHAR2(50) NOT NULL,
+    storedname varchar2(50) NOT NULL,
+    inquiryboardno number not null,
+    filetype varchar2(20) not null,
+    filesize number not null,
+    writedate date not null,
+    iboardno number not null,
+    
+    CONSTRAINT iboardno_fk FOREIGN KEY(iboardno) REFERENCES inquiryboard(iboardno)
+);
+--faq
+CREATE TABLE FREQUENTREPLY(
+    frequentReplyNo NUMBER PRIMARY KEY,
+    frequentReplayContent VARCHAR2(200) NOT NULL,
+    frequentReplyInDesk NUMBER NOT NULL
+);
+
+CREATE SEQUENCE faq_seq;
+
+-- 시간 설정 테이블
+CREATE TABLE TimeSetting (
+    timeSettingNo NUMBER NOT NULL PRIMARY KEY,
+    consultOnOff NUMBER NOT NULL,
+    autoShutdownSetting NUMBER NOT NULL,
+    consultTimeSettingStatus NUMBER NOT NULL,
+    consultType VARCHAR2(10) NOT NULL,
+    consultTimeSetting VARCHAR2(20) NOT NULL,
+    macroAnswer VARCHAR2(50) NOT NULL
+);
+
+CREATE SEQUENCE TimeSetting_seq;
+
+-- 관리자 테이블
+--DROP TABLE admin;
+--DROP SEQUENCE admin_seq;
+
+--CREATE TABLE admin
+--(
+--    adminno NUMBER NOT NULL,
+--    adminid VARCHAR2(20) NOT NULL,
+--    adminpw VARCHAR2(20) NOT NULL
+--);
+
+---- 관리자 테이블 PK
+--ALTER TABLE admin
+--ADD CONSTRAINT ADMINNO_PK PRIMARY KEY(adminno);
+--
+---- SEQUENCE
+--CREATE SEQUENCE admin_seq;
+
+
+-- 관리자 게시글
+--DROP TABLE adminboard;
+--DROP SEQUENCE adminboard_seq;
+
+--CREATE TABLE adminboard
+--(
+--    boardno NUMBER NOT NULL,
+--    corporationname VARCHAR2(20) NOT NULL,
+--    boardsorting VARCHAR2(10) NOT NULL,
+--    title VARCHAR2(30) NOT NULL,
+--    writer VARCHAR2(20) NOT NULL,
+--    writedate VARCHAR2(10) NOT NULL,
+--    views NUMBER NOT NULL,
+--    boardcontent VARCHAR2(500) NOT NULL,
+--    inquiryanswer VARCHAR2(500) NOT NULL
+--);
+--
+---- 관리자 게시글 PK
+--ALTER TABLE adminboard
+--ADD CONSTRAINT ADMINBOARD_PK PRIMARY KEY(boardno);
+--
+---- SEQUENCE
+--CREATE SEQUENCE adminboard_seq;
+
+--commit;
+
+ALTER TABLE COUNSELOR MODIFY (COUNSELORPOSITION DEFAULT 'counselor');
+ALTER TABLE COUNSELOR MODIFY (COUNSELOREMAILCHECKED DEFAULT 0);
+ALTER TABLE COUNSELOR MODIFY (MANAGERCONFIRM DEFAULT 0);
+
+ALTER TABLE COUNSELOR ADD (CounselorEmailHash VARCHAR2(64) NOT NULL); 
+
+ALTER TABLE COUNSELOR ADD CONSTRAINT UQ_COUNSELORID UNIQUE(COUNSELORID);
+ALTER TABLE COUNSELOR ADD CONSTRAINT UQ_COUNSELORNICKNAME UNIQUE(COUNSELORNICKNAME);
+
+insert into CORPORATION values(1, 'KH');
+insert into CORPORATION values(2, 'TEST');
+
+--세미 ( 파일 테이블에 보드넘버 두개여서 컬럼삭제 inquiryboardno/iboardno)
+ALTER TABLE inquiryboardfile DROP COLUMN inquiryboardno;
+
+-- 2019-11-26 현석발견 / 메신저 varchar2(10) 길이 너무 짧아서 varchar2(20)으로 늘림
+ALTER TABLE messenger MODIFY(messengerName varchar2(20));
+ALTER TABLE messenger MODIFY(messengerImage varchar2(20));
+
+-- 2019-11-27 현석 / 메신저 이미지, 등록여부 삭제
+ALTER TABLE messenger DROP COLUMN messengerImage;
+ALTER TABLE messenger DROP COLUMN registrationStatus;
+
+--2019-11-28 세미
+ALTER TABLE INQUIRYBOARD MODIFY (iBoardInquiryType VARCHAR2(20));
+ALTER TABLE INQUIRYBOARD MODIFY (iBoardAnswer VARCHAR2(20));
+ALTER TABLE INQUIRYBOARD MODIFY (iBoardAnswer DEFAULT '[답변진행중]');
+ALTER TABLE INQUIRYBOARD MODIFY (iBoardTitle VARCHAR2(100));
+ALTER TABLE INQUIRYBOARD MODIFY (iBoardContent VARCHAR2(1000));
+ALTER TABLE INQUIRYBOARD DROP CONSTRAINT counselorNo_inquiry_fk;
+ALTER TABLE INQUIRYBOARD DROP COLUMN counselorNo;
+ALTER TABLE INQUIRYBOARD ADD(counselorId VARCHAR2(20));
+
+alter table INQUIRYBOARD add foreign key(counselorId) references counselor(counselorId);
+
+--카카오, 위챗 등 메신저 더미데이터 2019-11-28 현석
+insert into messenger values(1, 'kakao', 1);
+insert into messenger values(2, 'line', 1);
+insert into messenger values(3, 'instagram', 1);
+insert into messenger values(4, 'facebook', 1);
+insert into messenger values(5, 'wechat', 1);
+
+-- 자주쓰는 답변 컬럼명 오타 수정 2019-11-30 유진
+ALTER TABLE FREQUENTREPLY RENAME COLUMN FREQUENTREPLAYCONTENT TO FREQUENTREPLYCONTENT;
+
+-- 자주쓰는 답변 시퀀스 이름 변경
+drop sequence faq_seq;
+drop sequence frequentReply_seq;
+create sequence frequentReply_seq;
+
+ALTER TABLE CORPORATION ADD (CEO VARCHAR2(20), registerDate VARCHAR2(20), phoneNum VARCHAR2(20), counselorCnt NUMBER,  sales NUMBER); 
+
+ALTER TABLE COUNSELOR MODIFY (COUNSELOREMAIL VARCHAR2(30));
+ALTER TABLE NOTICEBOARD ADD(counselorId VARCHAR2(20));
+ALTER TABLE counselor ADD (counselorWithDrawalChecked NUMBER DEFAULT 0);
+
+ALTER TABLE INQUIRYBOARD ADD (CORPORATIONNAME VARCHAR2(20));
+ALTER TABLE NOTICEBOARD ADD (CORPORATIONNAME VARCHAR2(20));
+alter table noticeboard drop column counselorno;
