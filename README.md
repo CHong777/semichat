@@ -1,6 +1,8 @@
 # semichat
 KH SemiProject SemiChat ( Messanger integration manegement program )
 
+세미프로젝트에서 깃을 사용하지 않아 최종 파일들을 업로드 하였습니다.
+
 ### Development Environment
 
 - JDK version : Java SE Development Kit 8
