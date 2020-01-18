@@ -1,0 +1,125 @@
+@charset "UTF-8";
+
+@font-face { font-family: 'ON-IGothic'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eleven@1.0/ON-IGothic.woff') format('woff'); font-weight: normal; font-style: normal; }
+
+
+* {
+	font-family: 'ON-IGothic';
+}
+
+body {
+	min-width:1920px;
+}
+
+.modal-backdrop {
+   z-index: -1;
+}
+
+form#loginForm{
+   padding: 156px;
+}
+/* 강제로 준 margin / 수정금지 */
+header {
+	margin-top:-30px;
+}
+header a{
+	color : #4ea1d3;
+}
+#nav{
+	 height: 100px;
+}
+.navbar-brand{
+	font-size:40px;
+}
+.nav-item{
+	margin-top:10px;
+	font-size:21px;
+}
+.dropdown-item{
+	color : #4ea1d3;
+}
+.dropdown-item:hover{
+	color: #0056b3;
+}
+
+#wrapper{
+	margin-top:30px;
+	min-height:800px;
+}
+
+.container {
+	margin-top: 30px;
+}
+
+.carousel-inner,
+.slide 
+{
+	height: 400px;
+}
+
+.mainbtn {
+	margin-left: 13px;
+}
+
+.mainbtn a, 
+.mainbtn a:active
+{
+	background-color: #4ea1d3;
+	border-color: #4ea1d3;
+	color: white;
+}
+
+.mainbtn a:hover {
+	background-color: #4890B8;
+	border-color: #4890B8;
+	color: white;
+}
+
+.left-box {
+  float: left;
+  width: 40%;
+}
+.right-box {
+  float: right;
+  width: 60%;
+}
+
+.left-box h1{
+	padding: 10px;
+	margin-top: 10px;
+}
+
+.left-box h3 {
+	padding-left: 10px;
+}
+
+/* 상담데스크 배치 */
+.left{
+	float:left;
+	width:20%;
+	height:750px;
+/* 	border : 1px solid #4ea1d3; */
+}
+.center{
+	float:left;
+	width:60%;
+	height:750px;
+/* 	border : 1px solid #4ea1d3; */
+}
+.right{
+	float:left;
+	width:20%;
+	height:750px;
+/* 	border : 1px solid #4ea1d3; */
+}
+
+footer{
+	background-color:#4ea1d3;
+	margin : auto;
+	height:200px
+}
+
+#service{
+	float:right;
+	color:white;
+}
