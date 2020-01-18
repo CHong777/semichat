@@ -1,0 +1,34 @@
+package controller.mypage;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import service.face.mypage.MyInfoService;
+import service.impl.mypage.MyInfoServiceImpl;
+
+@WebServlet("/modify/nickcheck")
+public class ModifyMyInfoNickCheckController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+      
+	private MyInfoService myInfoService = new MyInfoServiceImpl();
+
+    @Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		req.setCharacterEncoding("UTF-8");
+		resp.setContentType("text/html;charset=UTF-8");
+
+		String nickname = req.getParameter("nickname");
+		
+		int check = myInfoService.counselorNicknameCheck(nickname);
+		req.setAttribute("check", check);
+		
+		req.getRequestDispatcher("/WEB-INF/views/join/nicknameCheck.jsp").forward(req, resp);
+		
+	}
+}
